@@ -96,9 +96,10 @@ class Apple:
 snek = Snake()
 apko = Apple()
 next_move = 'right'
+timer = 0
 running = True
 while running:
-    clock.tick(6)
+    clock.tick(60)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -116,17 +117,21 @@ while running:
                 if snek.direction != 'down':
                     next_move = 'up'
 
-    snek.direction = next_move
+    timer += 1
+
     window.fill(BLACK)
-    snek.update()
-    if snek.x < 0 or snek.x > SCREEN_WIDTH:
-        running = False
-    if snek.is_out() or snek.self_collision():
-        running = False
-        break
-    if apko.collision(snek):
-        snek.grow()
-        apko.update()
+    if timer == 10:
+        snek.direction = next_move
+        snek.update()
+        if snek.x < 0 or snek.x > SCREEN_WIDTH:
+            running = False
+        if snek.is_out() or snek.self_collision():
+            running = False
+            break
+        if apko.collision(snek):
+            snek.grow()
+            apko.update()
+        timer = 0
     apko.draw()
     snek.draw()
     pygame.display.flip()
